@@ -7,7 +7,7 @@ SecureSight is a CCTV monitoring software where you can connect upto 3 CCTV feed
 
 ### Demo
 
-Local demo link - https://drive.google.com/file/d/19cpe5DTutCFW1WuXa82smDGub4mW0r2C/view?usp=sharing
+Local demo link - https://drive.google.com/file/d/1qSf-WKe4fIZstcCfUQ6P9qAdzUgycZEz/view?usp=sharing
 
 Due to the limitations of Vercel with SQLite, API can be tested locally after running `npm run dev`.
 
