@@ -5,13 +5,20 @@ SecureSight is a CCTV monitoring software where you can connect upto 3 CCTV feed
 
 
 
+### Demo
+
+Local demo link - https://drive.google.com/file/d/19cpe5DTutCFW1WuXa82smDGub4mW0r2C/view?usp=sharing
+
+Due to the limitations of Vercel with SQLite, API can be tested locally after running `npm run dev`.
+
+
+
 ### Features
 
 - Camera & Incident Models with Relational Mapping using Prisma ORM
 - Seed script which populates 3 cameras and 12 diverse incidents across multiple threat types (e.g., Unauthorised Access, Gun Threat)
 - RESTful API Routes 
 - Incident Player Panel & Incident List Panel
-
 
 
 
@@ -43,14 +50,6 @@ SecureSight is a CCTV monitoring software where you can connect upto 3 CCTV feed
 <img width="1357" height="864" alt="Image" src="https://github.com/user-attachments/assets/0c3b0ce3-384c-4c80-8b5d-252f63e43d5a" />
 
 <img width="1362" height="663" alt="Image" src="https://github.com/user-attachments/assets/629cecd0-0ba1-4c22-97da-ddf161a75570" />
-
-
-
-
-
-### Demo
-
-Due to the limitations of Vercel with SQLite, API can be tested locally after running `npm run dev`.
 
 
 
