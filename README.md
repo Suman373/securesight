@@ -5,12 +5,6 @@ SecureSight is a CCTV monitoring software where you can connect upto 3 CCTV feed
 
 
 
-### Demo
-
-[Try it out here](https://livewave-v1.vercel.app)
-
-
-
 ### Features
 
 - Camera & Incident Models with Relational Mapping using Prisma ORM
@@ -21,7 +15,42 @@ SecureSight is a CCTV monitoring software where you can connect upto 3 CCTV feed
 
 
 
+### Tech Decisions
+- Used SQLite (dev.db) for local development due to Prisma support and quick setup.
+- Backend APIs tested locally with Postman due to limitations with SQLite in Vercel.
+
+### If I had more time
+- Refactor frontend into more modular and readable components for better scalability.
+- Implement optional timeline feature and integrate video instead of static image
+- Create other pages for listing cameras
+- Implement simple authentication for protecting routes
+
 ### Screenshots
+
+
+<img width="1919" height="833" alt="Image" src="https://github.com/user-attachments/assets/6f0e8ab4-ce67-4972-b5ac-d66f4181fc25" />
+
+<img width="1919" height="845" alt="Image" src="https://github.com/user-attachments/assets/d2f77631-8de9-409e-9073-0adce1f86c45" />
+
+<img width="1919" height="858" alt="Image" src="https://github.com/user-attachments/assets/cffbff51-b9a3-4c82-b033-5ea47f74b156" />
+
+<img width="1388" height="830" alt="Image" src="https://github.com/user-attachments/assets/0d9a8ae9-1e4d-4d76-92ae-b262fb2b917c" />
+
+<img width="1366" height="767" alt="Image" src="https://github.com/user-attachments/assets/cd168688-95d1-468e-a901-cbcbcfeff315" />
+
+<img width="1366" height="735" alt="Image" src="https://github.com/user-attachments/assets/3f2105d8-0e10-40a0-849a-b4251fc699ff" />
+
+<img width="1357" height="864" alt="Image" src="https://github.com/user-attachments/assets/0c3b0ce3-384c-4c80-8b5d-252f63e43d5a" />
+
+<img width="1362" height="663" alt="Image" src="https://github.com/user-attachments/assets/629cecd0-0ba1-4c22-97da-ddf161a75570" />
+
+
+
+
+
+### Demo
+
+Due to the limitations of Vercel with SQLite, API can be tested locally after running `npm run dev`.
 
 
 
@@ -73,8 +102,7 @@ To run this project, you will need to add the following environment variable in 
 
  Getting started with project normally
    - Fork the repository
-   - Clone your fork in your local machine
-    `git clone <url>.git `
+   - Clone your fork in your local machine `git clone <url>.git`
    - Run `npm install` inside the folders containing package.json file
    - To run the client `npm run dev`
    - Generate prisma client `npx prisma generate`
