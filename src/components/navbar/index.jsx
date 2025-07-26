@@ -36,7 +36,7 @@ const Navbar = () => {
     const [chevronUp, setChevronUp] = useState(false);
 
     return (
-        <div className="h-20 relative w-full">
+        <div className="h-20 w-full sticky top-0 z-50">
             <div className='bg-[#D0A70459]/50 h-full mx-auto absolute -z-10 inset-0 w-[40%]'>
 
             </div>
