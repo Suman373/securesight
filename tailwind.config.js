@@ -9,6 +9,7 @@ export default {
     extend: {
       colors: {
         transparentYellow: '#D0A70459',
+        textWhite: '#FAFAFA'
       },
     },
   },

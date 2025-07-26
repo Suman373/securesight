@@ -10,6 +10,9 @@ export async function GET(request) {
         const incidents = await prisma.incident.findMany({
             where: resolved === null ? {} : { resolved: resolved === "true" },
             orderBy: { tsStart: 'desc' }, // newest first
+            include: {
+                camera: true
+            }
         });
         return NextResponse.json(incidents);
     } catch (error) {
