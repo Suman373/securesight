@@ -1,6 +1,6 @@
 "use client";
 
-import { fetchIncidents } from "@/utils/api";
+import { fetchCameras, fetchIncidents, resolveIncident } from "@/utils/api";
 import { convertISOtoDate, convertISOtoTimeStamp, incidentIconMap } from "@/utils/constants";
 import { AlertTriangle, CalendarDays, Cctv, CheckCheck, ChevronRight, Clock, Disc2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -12,15 +12,62 @@ const Dashboard = () => {
     const [resolvedIncidents, setResolvedIncidents] = useState([]);
     const [currentIncidentId, setCurrentIncidentId] = useState(null);
     const [cameras, setCameras] = useState([]);
-    const [currentCameraId, setCurrentCameraId] = useState(null);
 
     const currentIncident = useMemo(() => unresolvedIncidents.find(i => i.id === currentIncidentId), [unresolvedIncidents, currentIncidentId]);
+    const currentCameraId = useMemo(() => currentIncident?.camera.id ?? null, [currentIncident]);
+
+
+    const handleResolveClick = async (incidentId) => {
+        try {
+            const updatedIncident = await resolveIncident(incidentId);
+            if (!updatedIncident) {
+                toast.error("Could not resolve incident");
+                return;
+            }
+            toast.success("Incident resolved");
+            if (updatedIncident.resolved) {
+                setUnresolvedIncidents(prev => {
+                    const updated =  prev.filter(i => i.id !== incidentId);
+                    if(updated.length>0) {
+                        setCurrentIncidentId(updated[0].id);
+                    }else {
+                        setCurrentIncidentId(null);
+                    }
+                    return updated;
+                });
+                setResolvedIncidents(prev => [updatedIncident, ...prev]);
+            } else {
+                setResolvedIncidents(prev => prev.filter(i => i.id !== incidentId));
+                setUnresolvedIncidents(prev => [updatedIncident, ...prev]);
+            }
+        } catch (error) {
+            console.log("Error resolving incident:", error);
+            toast.error("Failed to resolve incident");
+        }
+    }
+
+
+    const fetchAllCameras = async () => {
+        try {
+            const camerasResponse = await fetchCameras();
+            if (!camerasResponse || camerasResponse.length === 0) {
+                toast.error("No cameras found");
+                return;
+            }
+            console.log(camerasResponse);
+            setCameras(camerasResponse);
+        } catch (error) {
+            console.error("Error fetching cameras:", error);
+            toast.error("Failed to fetch cameras");
+        }
+    };
 
     const fetchResolvedIncidents = async () => {
         try {
             const incidentsResponse = await fetchIncidents(true);
             if (!incidentsResponse || incidentsResponse.length === 0) {
-                toast.error("No incidents found");
+                toast.error("No resolved incidents found");
+                return;
             }
             console.log(incidentsResponse);
             setResolvedIncidents(incidentsResponse);
@@ -34,21 +81,29 @@ const Dashboard = () => {
         try {
             const incidentsResponse = await fetchIncidents(false);
             if (!incidentsResponse || incidentsResponse.length === 0) {
-                toast.error("No incidents found");
+                toast.error("No unresolved incidents found");
             }
             console.log(incidentsResponse);
             setUnresolvedIncidents(incidentsResponse);
             setCurrentIncidentId(incidentsResponse[0].id);
-            setCurrentCameraId(incidentsResponse[0].cameraId);
         } catch (error) {
             console.error("Error fetching incidents:", error);
             toast.error("Failed to fetch incidents");
         }
     };
 
+
+
+    const handleIncidentChange = (incidentId) => {
+        if (incidentId === currentIncidentId) return;
+        setCurrentIncidentId(incidentId);
+    }
+
+
     useEffect(() => {
         fetchUnresolvedIncidents();
         fetchResolvedIncidents();
+        fetchAllCameras();
     }, []);
 
     return (
@@ -68,11 +123,15 @@ const Dashboard = () => {
                         </span>
                     </div>
 
-                    <div className="absolute h-[300px] bg-red-200 w-1/3 bottom-4 right-4 space-y-2 z-10 text-white">
-                        <span className="flex items-center gap-1 bg-neutral-800  text-sm font-medium px-2 py-1 rounded-md">
-                        </span>
+                    <div className="absolute h-fit grid grid-cols-2 gap-2 w-1/3 bottom-4 right-4 space-y-2 z-10 text-white">
+                        {cameras?.filter((camera) => camera.id !== currentCameraId).map((camera, index) => (
+                            <div className="text-sm flex flex-col" key={camera.id}>
+                                <div className="bg-neutral-900 text-neutral-300 w-full h-fit py-1 px-2">Camera - {camera.id}</div>
+                                <img className="max-h-[80px] w-full rounded-md" src='/thumbnail/1.png' alt="incident" />
+                            </div>
+                        ))
+                        }
                     </div>
-
                 </div>
 
                 {/* Right panel for incidents list */}
@@ -91,8 +150,10 @@ const Dashboard = () => {
                         {
                             unresolvedIncidents?.length > 0 && unresolvedIncidents.map((incident, index) => (
                                 <li key={incident.id} className="flex h-22 items-center justify-between p-2 rounded">
-                                    <div className="flex items-center justify-start gap-2 w-2/3 p-1">
-                                        <img className="h-[80px] w-[120px] rounded-md" src='/thumbnail/1.png' alt="incident" />
+                                    <div
+                                        onClick={() => handleIncidentChange(incident.id)}
+                                        className="flex items-center justify-start gap-2 w-2/3 p-1 cursor-pointer">
+                                        <img className="h-[80px] w-[120px] rounded-md" src={incident.thumbnailUrl} alt="incident" />
                                         <div className="flex flex-col items-start justify-between gap-1 p-1">
                                             <div className="flex items-center justify-start gap-1">
                                                 {incidentIconMap[incident.type]}
@@ -105,7 +166,9 @@ const Dashboard = () => {
                                         </div>
                                     </div>
                                     <div className="w-1/3 flex items-center justify-end px-4">
-                                        <p className="flex items-center justify-start gap-1 text-amber-300 cursor-pointer"><span>Resolve</span>
+                                        <p
+                                        onClick={()=> handleResolveClick(incident.id)}
+                                        className="flex items-center justify-start gap-1 text-amber-300 cursor-pointer"><span>Resolve</span>
                                             <ChevronRight />
                                         </p>
                                     </div>

@@ -33,7 +33,7 @@ async function main(){
                 type: ["Gun Threat", "Face Recognized","Unauthorized Access"][getRandomNum(3)],
                 tsStart: new Date(now.getTime() - millisec*(i+1)), // 1 hr gap
                 tsEnd: new Date(now.getTime() - millisec*i),
-                thumbnailUrl: `/thumbnail/${i+1}.jpg`,
+                thumbnailUrl: `/thumbnail/${i+1}.png`,
             }
         })
     }
